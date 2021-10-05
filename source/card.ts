@@ -10,7 +10,13 @@ export class Card extends PIXI.Sprite {
         quality: 0.5
     });
 
-    constructor(renderer: PIXI.AbstractRenderer) {
+    data: any;
+    dragging: boolean;
+    eventTouchStart: PIXI.Point;
+    dragMove: (card: Card) => void;
+    dragEnd: (card: Card) => void;
+
+    constructor(renderer: PIXI.AbstractRenderer, dragMove: (card: Card) => void, dragEnd: (card: Card) => void) {
 
         var gr = new PIXI.Graphics();  
         gr.lineStyle(10, 0xFFBD01, 1);
@@ -21,6 +27,9 @@ export class Card extends PIXI.Sprite {
 
         super(texture);
 
+        this.dragMove = dragMove;
+        this.dragEnd = dragEnd;
+
         // enable the bunny to be interactive... this will allow it to respond to mouse and touch events
         this.interactive = true;
 
@@ -30,62 +39,57 @@ export class Card extends PIXI.Sprite {
         this.anchor.set(0.5);
 
         this
-        .on('pointerdown', onDragStart)
-        .on('pointerup', onDragEnd)
-        .on('pointerupoutside', onDragEnd)
-        .on('pointermove', onDragMove);
+        .on('pointerdown', this.onDragStart)
+        .on('pointerup', this.onDragEnd)
+        .on('pointerupoutside', this.onDragEnd)
+        .on('pointermove', this.onDragMove);
 
         let image = PIXI.Texture.from('spr_rb-gb_003.png');
         let sprite1 = new PIXI.Sprite(image);
         sprite1.anchor.set(0.5);
         this.addChild(sprite1);
     }
-}
 
-function onDragStart(event) {
-    // store a reference to the data
-    // the reason for this is because of multitouch
-    // we want to track the movement of this particular touch
-    this.data = event.data;
-    this.dragging = true;
-    this.eventTouchStart = this.data.getLocalPosition(this)
-    this.filters = [Card.outlineFilterRed];
-}
-
-function onDragEnd() {
-    this.dragging = false;
-    // set the interaction data to null
-    this.data = null;
-
-    // if (isOverlap(slot, this)) {
-    //     this.x = slot.x;
-    //     this.y = slot.y;
-    // }
-    // slot.filters = [];
-    this.filters = [];
-
-}
-
-function onDragMove() {
-    if (this.dragging) {
-        const newPosition = this.data.getLocalPosition(this.parent);
-        this.x = newPosition.x - this.eventTouchStart.x;
-        this.y = newPosition.y - this.eventTouchStart.y;
-
-        // if (isOverlap(slot, this)) {
-        //     slot.filters = [outlineFilterRed];
-        // } else {
-        //     slot.filters = [];
-        // }
+    isOverlap(object2) {
+        const bounds1 = this.getBounds();
+        const bounds2 = object2.getBounds();
+    
+        return bounds1.x < bounds2.x + bounds2.width
+            && bounds1.x + bounds1.width > bounds2.x
+            && bounds1.y < bounds2.y + bounds2.height
+            && bounds1.y + bounds1.height > bounds2.y;
     }
-}
 
-function isOverlap(object1, object2) {
-    const bounds1 = object1.getBounds();
-    const bounds2 = object2.getBounds();
+    onDragStart(event) {
+        // store a reference to the data
+        // the reason for this is because of multitouch
+        // we want to track the movement of this particular touch
+        this.data = event.data;
+        this.dragging = true;
+        this.eventTouchStart = this.data.getLocalPosition(this)
+        this.filters = [Card.outlineFilterRed];
 
-    return bounds1.x < bounds2.x + bounds2.width
-        && bounds1.x + bounds1.width > bounds2.x
-        && bounds1.y < bounds2.y + bounds2.height
-        && bounds1.y + bounds1.height > bounds2.y;
+        this.zIndex = 1000;
+
+    }
+    
+    onDragEnd() {
+        this.dragging = false;
+        // set the interaction data to null
+        this.data = null;
+    
+        this.filters = [];
+
+        this.dragEnd(this);
+        this.zIndex = 0;
+    }
+    
+    onDragMove() {
+        if (this.dragging) {
+            this.dragMove(this);
+            const newPosition = this.data.getLocalPosition(this.parent);
+            this.x = newPosition.x - this.eventTouchStart.x;
+            this.y = newPosition.y - this.eventTouchStart.y;
+        }
+    }
 }

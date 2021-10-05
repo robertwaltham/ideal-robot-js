@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { FpsMeter } from './fps-meter';
 import { Card } from './card'
+import { Slot } from './slot'
 
 interface EngineParams {
     containerId: string,
@@ -25,6 +26,7 @@ class Engine {
             antialias: true
         });
         this.stage = new PIXI.Container();
+        this.stage.sortableChildren = true;
         this.graphics = new PIXI.Graphics();
         this.fpsMax = params.fpsMax;
 
@@ -58,15 +60,46 @@ function create() {
     /* Create your Game Objects here */
     /* ***************************** */
 
-    var card = new Card(engine.renderer);
+    var slots:Slot[] = [];
+
+    var dragEnd = (card: Card) => {
+        slots.forEach((item) => {
+            if (card.isOverlap(item)) {
+                card.x = item.x;
+                card.y = item.y;
+            }
+            item.setOff();
+        });
+    };
+    var dragMove = (card: Card) => {
+        slots.forEach((item) => {
+            if (card.isOverlap(item)) {
+                item.setOn();
+            } else {
+                item.setOff();
+            }
+        });
+    };
+
+    var card = new Card(engine.renderer, dragMove, dragEnd);
     card.x = engine.renderer.width * 3 / 4;
-    card.y = engine.renderer.height * 3 / 4;
+    card.y = engine.renderer.height / 2;
     engine.stage.addChild(card);
 
-    card = new Card(engine.renderer);
+    card = new Card(engine.renderer, dragMove, dragEnd);
     card.x = engine.renderer.width / 4;
-    card.y = engine.renderer.height / 4;
+    card.y = engine.renderer.height / 2;
     engine.stage.addChild(card);
+
+    for(var i=0;i<5;i++) {
+        var slot = new Slot(engine.renderer);
+
+        slot.x = engine.renderer.width * (i + 1) / 6;
+        slot.y = engine.renderer.height / 4;
+
+        slots.push(slot);
+        engine.stage.addChild(slot);
+    }
 
     /* FPS */
     const fpsMeterItem = document.createElement('div');
