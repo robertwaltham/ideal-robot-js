@@ -13,14 +13,6 @@ object-assign
  */
 
 /*!
- * @pixi/app - v6.1.3
- * Compiled Mon, 13 Sep 2021 15:29:31 UTC
- *
- * @pixi/app is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-
-/*!
  * @pixi/constants - v6.1.3
  * Compiled Mon, 13 Sep 2021 15:29:31 UTC
  *
@@ -49,6 +41,14 @@ object-assign
  * Compiled Mon, 13 Sep 2021 15:29:31 UTC
  *
  * @pixi/extract is licensed under the MIT License.
+ * http://www.opensource.org/licenses/mit-license
+ */
+
+/*!
+ * @pixi/filter-alpha - v6.1.3
+ * Compiled Mon, 13 Sep 2021 15:29:31 UTC
+ *
+ * @pixi/filter-alpha is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
  */
 
@@ -109,6 +109,14 @@ object-assign
  */
 
 /*!
+ * @pixi/runner - v6.1.3
+ * Compiled Mon, 13 Sep 2021 15:29:31 UTC
+ *
+ * @pixi/runner is licensed under the MIT License.
+ * http://www.opensource.org/licenses/mit-license
+ */
+
+/*!
  * @pixi/ticker - v6.1.3
  * Compiled Mon, 13 Sep 2021 15:29:31 UTC
  *
@@ -117,10 +125,10 @@ object-assign
  */
 
 /*!
- * @pixi/utils - v6.1.3
- * Compiled Mon, 13 Sep 2021 15:29:31 UTC
+ * pixi-filters - v4.1.5
+ * Compiled Wed, 29 Sep 2021 14:05:57 UTC
  *
- * @pixi/utils is licensed under the MIT License.
+ * pixi-filters is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
  */
 

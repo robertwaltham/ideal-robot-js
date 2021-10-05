@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { FpsMeter } from './fps-meter';
+import { Card } from './card'
 
 interface EngineParams {
     containerId: string,
@@ -57,11 +58,15 @@ function create() {
     /* Create your Game Objects here */
     /* ***************************** */
 
-    /* Sprite */
-    // sprite.anchor.set(0.5);
-    // sprite.x = engine.renderer.width / 2;
-    // sprite.y = engine.renderer.height / 2;
-    // engine.stage.addChild(sprite);
+    var card = new Card(engine.renderer);
+    card.x = engine.renderer.width * 3 / 4;
+    card.y = engine.renderer.height * 3 / 4;
+    engine.stage.addChild(card);
+
+    card = new Card(engine.renderer);
+    card.x = engine.renderer.width / 4;
+    card.y = engine.renderer.height / 4;
+    engine.stage.addChild(card);
 
     /* FPS */
     const fpsMeterItem = document.createElement('div');
