@@ -1,0 +1,28 @@
+{
+  "name": "cards",
+  "version": "1.0.0",
+  "description": "degens be degenning",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "typescript": "^4.4.3",
+    "webpack": "^5.56.1",
+    "webpack-cli": "^4.8.0"
+  },
+  "scripts": {
+    "clean": "yarn run clean-build-steps && rm -rf dist",
+    "tsc": "./node_modules/.bin/tsc",
+    "babel": "./node_modules/.bin/babel build-tsc --out-dir build-babel --source-maps",
+    "webpack": "webpack && cp public/* dist",
+    "clean-build-steps": "rm -rf build-tsc build-babel",
+    "build": "yarn run clean && yarn run tsc && yarn run babel && yarn run webpack && yarn run clean-build-steps"
+  },
+  "dependencies": {
+    "@types/offscreencanvas": "^2019.6.4",
+    "pixi-filters": "^4.1.5",
+    "pixi.js": "^6.1.3"
+  }
+}
