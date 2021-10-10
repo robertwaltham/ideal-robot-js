@@ -1,5 +1,3 @@
-import { Engine } from '../engine' 
-
 export interface Scene {
-    update(engine: Engine):void
+    update(time: number): void
 }

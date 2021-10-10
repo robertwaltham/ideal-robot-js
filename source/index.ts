@@ -1,7 +1,9 @@
 import * as PIXI from 'pixi.js'
-import { Engine } from './engine' 
+import { Engine } from './engine'
 import { FpsMeter } from './fps-meter';
 import { GameScene } from './Scenes/game-scene';
+import { IntroScene } from './Scenes/Intro-scene';
+import { Scene } from './Scenes/scene';
 
 const engine = new Engine({
     containerId: 'game',
@@ -12,16 +14,25 @@ const engine = new Engine({
 
 let fpsMeter: FpsMeter;
 let gameScene: GameScene;
+let introScene: IntroScene;
+var activeScene: Scene;
 
 window.onload = load;
 
 function load() {
     create();
-} // load
+}
 
 function create() {
 
     gameScene = new GameScene(engine);
+    introScene = new IntroScene(engine);
+    introScene.onTransition = () => {
+        activeScene = gameScene;
+        engine.stage.removeChild(introScene);
+        engine.stage.addChild(gameScene);
+    }
+    activeScene = introScene;
 
     /* FPS */
     const fpsMeterItem = document.createElement('div');
@@ -31,23 +42,24 @@ function create() {
     fpsMeter = new FpsMeter(() => {
         fpsMeterItem.innerHTML = 'FPS: ' + fpsMeter.getFrameRate().toFixed(2).toString();
     });
-  
+
+    engine.stage.addChild(introScene);
+
     setInterval(update, 1000.0 / engine.fpsMax);
+
+    PIXI.Ticker.shared.add(function (time) {
+        activeScene.update(time);
+    });
     render();
-} // create
+}
 
 function update() {
     fpsMeter.updateTime();
-
-
-} // update
+}
 
 function render() {
     requestAnimationFrame(render);
 
-    /* Sprite */
-    // sprite.rotation += 0.01;
-
     engine.renderer.render(engine.stage);
     fpsMeter.tick();
-} // render
+}

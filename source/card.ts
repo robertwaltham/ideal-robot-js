@@ -18,7 +18,7 @@ export class Card extends PIXI.Sprite {
 
     constructor(renderer: PIXI.AbstractRenderer, dragMove: (card: Card) => void, dragEnd: (card: Card) => void) {
 
-        var gr = new PIXI.Graphics();  
+        var gr = new PIXI.Graphics();
         gr.lineStyle(10, 0xFFBD01, 1);
         gr.beginFill(0xC34288);
         gr.drawRoundedRect(0, 0, 100, 161, 15);
@@ -30,19 +30,16 @@ export class Card extends PIXI.Sprite {
         this.dragMove = dragMove;
         this.dragEnd = dragEnd;
 
-        // enable the bunny to be interactive... this will allow it to respond to mouse and touch events
         this.interactive = true;
-
-        // this button mode will mean the hand cursor appears when you roll over the bunny with your mouse
         this.buttonMode = true;
 
         this.anchor.set(0.5);
 
         this
-        .on('pointerdown', this.onDragStart)
-        .on('pointerup', this.onDragEnd)
-        .on('pointerupoutside', this.onDragEnd)
-        .on('pointermove', this.onDragMove);
+            .on('pointerdown', this.onDragStart)
+            .on('pointerup', this.onDragEnd)
+            .on('pointerupoutside', this.onDragEnd)
+            .on('pointermove', this.onDragMove);
 
         let image = PIXI.Texture.from('spr_rb-gb_003.png');
         let sprite1 = new PIXI.Sprite(image);
@@ -53,7 +50,7 @@ export class Card extends PIXI.Sprite {
     isOverlap(object2) {
         const bounds1 = this.getBounds();
         const bounds2 = object2.getBounds();
-    
+
         return bounds1.x < bounds2.x + bounds2.width
             && bounds1.x + bounds1.width > bounds2.x
             && bounds1.y < bounds2.y + bounds2.height
@@ -72,18 +69,18 @@ export class Card extends PIXI.Sprite {
         this.zIndex = 1000;
 
     }
-    
+
     onDragEnd() {
         this.dragging = false;
         // set the interaction data to null
         this.data = null;
-    
+
         this.filters = [];
 
         this.dragEnd(this);
         this.zIndex = 0;
     }
-    
+
     onDragMove() {
         if (this.dragging) {
             this.dragMove(this);

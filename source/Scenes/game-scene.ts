@@ -5,7 +5,7 @@ import { Card } from '../card'
 import { Slot } from '../slot'
 
 export class GameScene extends PIXI.Container implements Scene {
-    slots:Slot[] = [];
+    slots: Slot[] = [];
 
     constructor(engine: Engine) {
         super()
@@ -32,26 +32,26 @@ export class GameScene extends PIXI.Container implements Scene {
         var card = new Card(engine.renderer, dragMove, dragEnd);
         card.x = engine.renderer.width * 3 / 4;
         card.y = engine.renderer.height / 2;
-        engine.stage.addChild(card);
+        this.addChild(card);
 
         card = new Card(engine.renderer, dragMove, dragEnd);
         card.x = engine.renderer.width / 4;
         card.y = engine.renderer.height / 2;
-        engine.stage.addChild(card);
+        this.addChild(card);
 
-        for(var i=0;i<5;i++) {
+        for (var i = 0; i < 5; i++) {
             var slot = new Slot(engine.renderer);
 
             slot.x = engine.renderer.width * (i + 1) / 6;
             slot.y = engine.renderer.height / 4;
 
             this.slots.push(slot);
-            engine.stage.addChild(slot);
+            this.addChild(slot);
         }
 
     }
 
-    update(engine: Engine): void {
+    update(time: number): void {
 
     }
 
