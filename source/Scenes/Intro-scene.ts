@@ -3,6 +3,7 @@ import * as FILTERS from 'pixi-filters'
 
 import { Engine } from '../engine'
 import { Scene } from './scene'
+import { Slider } from '../Controls/slider';
 
 export class IntroScene extends PIXI.Container implements Scene {
 
@@ -75,6 +76,15 @@ export class IntroScene extends PIXI.Container implements Scene {
             this.fading = true;
             this.text.interactive = false;
         });
+
+        let slider = new Slider(engine.renderer, (slider) => {
+
+        });
+        slider.anchor.set(0.5);
+        slider.x = engine.renderer.width / 2;
+        slider.y = engine.renderer.height - 50;
+
+        this.addChild(slider);
     }
 
 
