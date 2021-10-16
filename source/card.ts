@@ -41,10 +41,10 @@ export class Card extends PIXI.Sprite {
             .on('pointerupoutside', this.onDragEnd)
             .on('pointermove', this.onDragMove);
 
-        let image = PIXI.Texture.from('spr_rb-gb_003.png');
-        let sprite1 = new PIXI.Sprite(image);
-        sprite1.anchor.set(0.5);
-        this.addChild(sprite1);
+        // let image = PIXI.Texture.from('spr_rb-gb_003.png');
+        // let sprite1 = new PIXI.Sprite(image);
+        // sprite1.anchor.set(0.5);
+        // this.addChild(sprite1);
     }
 
     isOverlap(object2) {
