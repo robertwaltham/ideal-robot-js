@@ -16,7 +16,7 @@
     "clean": "yarn run clean-build-steps && rm -rf dist",
     "tsc": "./node_modules/.bin/tsc",
     "babel": "./node_modules/.bin/babel build-tsc --out-dir build-babel --source-maps",
-    "webpack": "webpack && cp public/* dist",
+    "webpack": "webpack && cp -r public/* dist",
     "clean-build-steps": "rm -rf build-tsc build-babel",
     "build": "yarn run clean && yarn run tsc && yarn run babel && yarn run webpack && yarn run clean-build-steps"
   },

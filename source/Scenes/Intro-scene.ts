@@ -15,6 +15,38 @@ export class IntroScene extends PIXI.Container implements Scene {
     formatter: Intl.NumberFormat = new Intl.NumberFormat('en-CA', { maximumSignificantDigits: 3 })
     onTransition: () => void;
 
+    textStyle: PIXI.ITextStyle = {
+        fontFamily: 'Arial', fontSize: 60, fill: 0xff1010, align: 'center',
+        breakWords: false,
+        dropShadow: false,
+        dropShadowAlpha: 0,
+        dropShadowAngle: 0,
+        dropShadowBlur: 0,
+        dropShadowColor: '',
+        dropShadowDistance: 0,
+        fillGradientType: PIXI.TEXT_GRADIENT.LINEAR_VERTICAL,
+        fillGradientStops: [],
+        fontStyle: 'normal',
+        fontVariant: 'normal',
+        fontWeight: 'normal',
+        letterSpacing: 200,
+        lineHeight: 0,
+        lineJoin: 'miter',
+        miterLimit: 0,
+        padding: 0,
+        stroke: '',
+        strokeThickness: 0,
+        textBaseline: 'alphabetic',
+        trim: false,
+        whiteSpace: 'normal',
+        wordWrap: false,
+        wordWrapWidth: 0,
+        leading: 0
+    };
+
+    sprites: PIXI.Sprite[] = [];
+    spriteFilter: FILTERS.GlowFilter;
+
     constructor(engine: Engine) {
         super()
 
@@ -26,42 +58,15 @@ export class IntroScene extends PIXI.Container implements Scene {
             quality: 0.5
         });
 
-        let font: PIXI.ITextStyle = {
-            fontFamily: 'Arial', fontSize: 60, fill: 0xff1010, align: 'center',
-            breakWords: false,
-            dropShadow: false,
-            dropShadowAlpha: 0,
-            dropShadowAngle: 0,
-            dropShadowBlur: 0,
-            dropShadowColor: '',
-            dropShadowDistance: 0,
-            fillGradientType: PIXI.TEXT_GRADIENT.LINEAR_VERTICAL,
-            fillGradientStops: [],
-            fontStyle: 'normal',
-            fontVariant: 'normal',
-            fontWeight: 'normal',
-            letterSpacing: 0,
-            lineHeight: 0,
-            lineJoin: 'miter',
-            miterLimit: 0,
-            padding: 0,
-            stroke: '',
-            strokeThickness: 0,
-            textBaseline: 'alphabetic',
-            trim: false,
-            whiteSpace: 'normal',
-            wordWrap: false,
-            wordWrapWidth: 0,
-            leading: 0
-        };
+        // let font2 = { ...font };
+        // font2.fontSize = 12;
+        // font2.fill = 0x808080;
 
-        let font2 = { ...font };
-        font2.fontSize = 12;
-        font2.fill = 0x808080;
+        this.text = new PIXI.Text('Welcome');
+        this.text.style = this.textStyle;
 
-        this.text = new PIXI.Text('Welcome', font);
-        this.status = new PIXI.Text('Text', font2);
-        this.addChild(this.status);
+        // this.status = new PIXI.Text('Text', font2);
+        // this.addChild(this.status);
         this.text.filters = [this.outlineFilterRed];
 
         this.text.anchor.set(0.5);
@@ -77,22 +82,30 @@ export class IntroScene extends PIXI.Container implements Scene {
             this.text.interactive = false;
         });
 
-        let slider = new Slider(engine.renderer, (slider) => {
+        let image = PIXI.Texture.from('images/Smudge.webp');
+        for (var i = 0; i < 5; i++) {
+            let sprite = new PIXI.Sprite(image);
+            sprite.anchor.set(0.5);
+            sprite.scale.x = 0.25;
+            sprite.scale.y = 0.25;
+            // this.addChild(sprite);
+            sprite.filters = [this.outlineFilterRed];
+            sprite.x = engine.renderer.width / 2;
+            sprite.y = engine.renderer.height / 2;
 
-        });
-        slider.anchor.set(0.5);
-        slider.x = engine.renderer.width / 2;
-        slider.y = engine.renderer.height - 50;
+            this.sprites.push(sprite);
 
-        this.addChild(slider);
+        }
+
     }
 
 
     update(time: number): void {
         this.count += time;
 
-        this.status.text = `${this.fading} - ${this.formatter.format(this.outlineFilterRed.outerStrength)} - ${this.formatter.format(this.alpha)}`;
+        // this.status.text = `${this.fading} - ${this.formatter.format(this.outlineFilterRed.outerStrength)} - ${this.formatter.format(this.alpha)}`;
 
+        // Fade Out text to transition to next screen
         if (this.fading) {
             if (this.alpha > 0) {
                 this.alpha = this.alpha - (0.01);
@@ -101,10 +114,24 @@ export class IntroScene extends PIXI.Container implements Scene {
                 this.onTransition();
             }
         } else {
+
+
+            // mutate filter over time
             this.outlineFilterRed.outerStrength = 1 + Math.cos(this.count / (Math.PI * 16));
 
-            this.text.scale.x = 1 + Math.cos(this.count / (Math.PI * 16)) / 4;
-            this.text.scale.y = 1 + Math.cos(this.count / (Math.PI * 16)) / 4;
+
+            // Text zooms into view 
+            if (this.textStyle.letterSpacing > 0) {
+                this.textStyle.letterSpacing -= (time * 3);
+            } else {
+                this.textStyle.letterSpacing = 0;
+
+                // mutate size over time
+                this.text.scale.x = 1 + Math.cos(this.count / (Math.PI * 16)) / 8;
+                this.text.scale.y = 1 + Math.cos(this.count / (Math.PI * 16)) / 8;
+            }
+            this.text.style = this.textStyle;
+
         }
     }
 }
